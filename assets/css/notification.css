@@ -1,0 +1,29 @@
+/*!
+ * cicleinscription EADCNJ v1.0.0
+ *
+ * Copyright 2012 CEAJUD CNJ, Inc
+ * Licensed under the Ceajud License v1.0
+ * http://www.cnj.jus.br/eadcnj
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * Autor: Léo Santos
+ * Data: 25/09/2013
+ */
+
+
+@CHARSET "ISO-8859-1";
+
+.notifyproblem {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  line-height: 20px;
+  background-color: #F2DEDE;
+  border: 1px solid #EED3D7;
+  color: #B94A48;
+  border-bottom-left-radius:4px;
+  border-bottom-right-radius:4px;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+  margin-bottom:20px;
+  padding:8px 35px 8px 14px;
+  text-shadow:rgba(255, 255, 255, 0.498039) 0 1px 0;
+}

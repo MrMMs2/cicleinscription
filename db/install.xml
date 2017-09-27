@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/cicleinscription/db" VERSION="20170925" COMMENT="XMLDB file for Moodle mod/cicleinscription" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+    <TABLES>
+        <TABLE NAME="cicleinscription" COMMENT="Tabela responsável por armazenar registros de ciclo de inscrições" NEXT="ci_course_prematriculation">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course" />
+                <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="name">
+                </FIELD>
+                <FIELD NAME="name" TYPE="char" LENGTH="80" NOTNULL="true" SEQUENCE="false" COMMENT="Nome do ciclo." PREVIOUS="course" NEXT="intro" />
+                <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Campo para descrição do do ciclo." PREVIOUS="name" NEXT="datetimecreation" LENGTH="big" />
+                <FIELD NAME="datetimecreation" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Momento da criação" PREVIOUS="intro" NEXT="banner" DEFAULT="0" />
+                <FIELD NAME="banner" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Caminho da imagem referente ao ciclo." PREVIOUS="datetimecreation" NEXT="widthbanner" />
+                <FIELD NAME="widthbanner" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" PREVIOUS="banner" NEXT="heightbanner"></FIELD>
+                <FIELD NAME="heightbanner" TYPE="int" LENGTH="15" NOTNULL="false" SEQUENCE="false" PREVIOUS="widthbanner" NEXT="nameterm" />
+                <FIELD NAME="nameterm" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="heightbanner" NEXT="titleterm" COMMENT="Nome do termo de responsabilidade.">
+                </FIELD>
+                <FIELD NAME="titleterm" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="nameterm" NEXT="descriptionterm" COMMENT="título do termo de responsabilidade.">
+                </FIELD>
+                <FIELD NAME="descriptionterm" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="titleterm" NEXT="typeform" COMMENT="Descrição do termo de responsabilidade." LENGTH="big">
+                </FIELD>
+                <FIELD NAME="typeform" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="descriptionterm" COMMENT="Campo para armazenar o tipo de formulário." LENGTH="100">
+                </FIELD>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="course" UNIQUE="false" FIELDS="course"></INDEX>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="ci_course_prematriculation" COMMENT="Tabela responsável por armazenar os cursos que serão dosponibilizados para aquele ciclo de inscrição." PREVIOUS="cicleinscription" NEXT="ci_organ">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="courseid" />
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Código identificador do curso. Faz referência ao modelo dados do moodle." PREVIOUS="id" NEXT="cicleinscriptionid">
+                </FIELD>
+                <FIELD NAME="cicleinscriptionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Código identificador do ciclo de inscrição. Responsável por informar qual o ciclo de inscrição o curso pertence." PREVIOUS="courseid" NEXT="coursemodulesid" />
+                <FIELD NAME="coursemodulesid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Código identificador do course modules. Responsável por informar qual o course modules o curso pertence." PREVIOUS="cicleinscriptionid" NEXT="datetimedisponibilization">
+                </FIELD>
+                <FIELD NAME="datetimedisponibilization" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Data e hora que o curso foi disponibilizado para inscrição." PREVIOUS="coursemodulesid" NEXT="numberstudents">
+                </FIELD>
+                <FIELD NAME="numberstudents" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="60" SEQUENCE="false" COMMENT="Número máximo de alunos que poderão ser inscritos naquele curso em um determinado ciclo de inscrição." PREVIOUS="datetimedisponibilization">
+                </FIELD>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid" NEXT="cicleinscriptionid" />
+                <INDEX NAME="cicleinscriptionid" UNIQUE="false" FIELDS="cicleinscriptionid" PREVIOUS="courseid" NEXT="coursemodulesid">
+                </INDEX>
+                <INDEX NAME="coursemodulesid" UNIQUE="false" FIELDS="coursemodulesid" PREVIOUS="cicleinscriptionid"></INDEX>
+            </INDEXES>
+        </TABLE>
+
+
+        <TABLE NAME="ci_organ" COMMENT="Tabela responsável por armazenar os orgãos aos quais os alunos estarão se inscrevendo." PREVIOUS="ci_course_prematriculation" NEXT="ci_cicleorgan">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Nome do órgão" PREVIOUS="id" NEXT="acronym" />
+                <FIELD NAME="acronym" TYPE="char" LENGTH="45" NOTNULL="true" SEQUENCE="false" COMMENT="Sigla do Órgão" PREVIOUS="name" NEXT="limitvacancies" />
+                <FIELD NAME="limitvacancies" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Limite de vagas por tribunal." PREVIOUS="acronym" DEFAULT="2" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="ci_cicleorgan" COMMENT="Tabela responsável por armazenar os orgãos que deverão estar disponíveis para cada cico de inscrição." PREVIOUS="ci_organ" NEXT="ci_status_prematriculation">
+            <FIELDS>
+
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="organid">
+                </FIELD>
+
+                <FIELD NAME="organid" TYPE="int" LENGTH="10" COMMENT="chave estrangeira da tabela de ciclo de orgãos." SEQUENCE="false" NOTNULL="true" PREVIOUS="id" NEXT="cicleinscriptionid">
+                </FIELD>
+
+
+                <FIELD NAME="cicleinscriptionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="chave estrangeira da tabela de ciclo de inscrição." PREVIOUS="organid" NEXT="coursemodulesid">
+                </FIELD>
+                <FIELD NAME="coursemodulesid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="chave estrangeira da tabela de ciclo de course_modules." PREVIOUS="cicleinscriptionid" NEXT="limitvacancies">
+                </FIELD>
+                <FIELD NAME="limitvacancies" TYPE="int" LENGTH="11" NOTNULL="false" COMMENT="Campo responsável por armazenar a quantidade de vagas que será oferecida para aquele orgão em um determinado ciclo de inscrição." PREVIOUS="coursemodulesid">
+                </FIELD>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"></KEY>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="organid" UNIQUE="false" FIELDS="organid" NEXT="cicleinscriptionid"></INDEX>
+                <INDEX NAME="cicleinscriptionid" UNIQUE="false" FIELDS="cicleinscriptionid" PREVIOUS="organid" NEXT="coursemodulesid">
+                </INDEX>
+                <INDEX NAME="coursemodulesid" UNIQUE="false" FIELDS="coursemodulesid" PREVIOUS="cicleinscriptionid"></INDEX>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="ci_status_prematriculation" COMMENT="Tabela responsável por armazenar os status da pré matrícula que deverão ser os seguintes: SUCESSO - Aluno matriculado com sucesso; BLACKLIST - Aluno não pode se matricular por que está com o nome na blacklist; CURSANDO - Aluno não pode se matricular por que está matriculado em outro curso; LIMITE EXCEDIDO - Aluno não pode se matricular por que o limite de pessoas por tribunal já foi excedido." PREVIOUS="ci_cicleorgan" NEXT="ci_blacklist">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="name" />
+                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Nome do status." PREVIOUS="id" NEXT="description" />
+                <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Descrição do status." PREVIOUS="name" NEXT="emailmessage">
+                </FIELD>
+                <FIELD NAME="emailmessage" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Mensagem que será enviada por email para o usuário." PREVIOUS="description" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="ci_blacklist" COMMENT="Tabela responsável por armazenar os alunos da blacklist." PREVIOUS="ci_status_prematriculation" NEXT="ci_prematriculation">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="courseid" />
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Código identificador da tabela de cursos." PREVIOUS="id" NEXT="userid" />
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Código identificador da tabela de usuários" PREVIOUS="courseid" NEXT="datetimeinput" />
+                <FIELD NAME="datetimeinput" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Data e hora de entrada na blacklist." PREVIOUS="userid" NEXT="username" />
+                <FIELD NAME='username' TYPE="char" LENGTH="11" NOTNULL="true" COMMENT="Será o nome do usuário, preferencialmente o CPF." PREVIOUS="datetimeinput" NEXT="inputtype">
+                </FIELD>
+                <FIELD NAME="inputtype" TYPE="char" LENGTH="45" NOTNULL="true" COMMENT="Forma como aluno foi para a blacklist." PREVIOUS="username" NEXT="statusblacklist" DEFAULT="Automático">
+                </FIELD>
+                <FIELD NAME="statusblacklist" TYPE="char" LENGTH="1" NOTNULL="true" COMMENT="Status que dirá se o aluno está ativo - S na blacklist. Caso o aluno tenha não esteja mais na blacklist o status deverá ser alterado para - N e em seguida o sistema deverá adicionar a data de saída da blacklist." PREVIOUS="inputtype" NEXT="datetimeoutputblacklist" DEFAULT="S">
+                </FIELD>
+                <FIELD NAME="datetimeoutputblacklist" TYPE="int" LENGTH="11" NOTNULL="false" PREVIOUS="statusblacklist" COMMENT="Data em que o usuário teve o statusblacklist alterado para N. Isso só acontecerá automaticamente quando o usuário estiver blacklist durante 1 ano. Outra forma disso acontecer é manualmente, caso seja necessário.">
+                </FIELD>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="ci_prematriculation" COMMENT="Tabela responsável por armazenar as pré-inscrições dos usuários." PREVIOUS="ci_blacklist" NEXT="ci_sentmessages">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="organid" />
+                <FIELD NAME="organid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Código identificador da tabela de orgãos." PREVIOUS="id" NEXT="status_prematriculationid" />
+                <FIELD NAME="status_prematriculationid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Código identificador da tabela de status da pre-matricula." PREVIOUS="organid" NEXT="course_prematriculationid" />
+                <FIELD NAME='course_prematriculationid' TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Código identificador da tabela de cursos disponíveis para pre-inscrição." PREVIOUS="status_prematriculationid" NEXT="cicleinscriptionid">
+                </FIELD>
+                <FIELD NAME="cicleinscriptionid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="ciclo de inscrição. Diz qual ciclo de inscrição a atual inscrição pertence." PREVIOUS="course_prematriculationid" NEXT="timeenrollment">
+                </FIELD>
+                <FIELD NAME="timeenrollment" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Data que o usuário se matriculou pelo módulo de matrículas costumizadas." PREVIOUS="cicleinscriptionid" NEXT="termresponse">
+                </FIELD>
+                <FIELD NAME="termresponse" TYPE="int" LENGTH="1" NOTNULL="true" PREVIOUS="timeenrollment" NEXT="note" COMMENT="Resposta do termo de resposta poderá ser apenas 1 - Verdadeiro | 0 - Falso.">
+                </FIELD>
+                <FIELD NAME="note" TYPE="char" LENGTH="255" COMMENT='Campo de observação, caso o aluno tenha se matriculado grava a mensagem: "Aluno matriculado com sucesso". Já se o aluno não conseguir se matricular por estar em uma blacklist, campo apresenta a seguinte mensagem: "Aluno não matriculado por que faz parte da blacklist". Se o aluno já estiver inscrito em outro curso, sistema apresenta a mensagem: "Aluno não matriculado por que já está matriculado em outro curso". Caso já tenha inscrito dois alunos para o tribunal selecionado, sistema apresenta a mensagem: "Aluno não matriculado pois já excedeu o limite de vagas".' NOTNULL="true" PREVIOUS="termresponse" NEXT="username">
+                </FIELD>
+                <FIELD NAME="username" TYPE="char" LENGTH="100" COMMENT="Nome de usuário para pré-inscrição." NOTNULL="true" PREVIOUS="note" NEXT="password" DEFAULT="''">
+                </FIELD>
+                <FIELD NAME="password" TYPE="char" LENGTH="32" COMMENT="Senha do usuário" NOTNULL="true" PREVIOUS="username" NEXT="firstname" DEFAULT="''">
+                </FIELD>
+                <FIELD NAME="firstname" TYPE="char" LENGTH="100" COMMENT="Nome do Aluno." NOTNULL="true" PREVIOUS="password" NEXT="lastname" DEFAULT="''">
+                </FIELD>
+                <FIELD NAME="lastname" TYPE="char" LENGTH="100" COMMENT="Sobrenome do aluno inscrito." NOTNULL="true" PREVIOUS="firstname" NEXT="email" DEFAULT="''">
+                </FIELD>
+                <FIELD NAME="email" TYPE="char" LENGTH="100" COMMENT="Email do aluno." NOTNULL="true" PREVIOUS="lastname" NEXT="city" DEFAULT="''">
+                </FIELD>
+                <FIELD NAME="city" TYPE="char" LENGTH="120" COMMENT="Cidade do aluno." NOTNULL="true" PREVIOUS="email" NEXT="country" DEFAULT="''">
+                </FIELD>
+                <FIELD NAME="country" TYPE="char" LENGTH="2" COMMENT="Estado" NOTNULL="true" PREVIOUS="city" DEFAULT="''">
+                </FIELD>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="organid" UNIQUE="false" FIELDS="organid" NEXT="status_prematriculationid">
+                </INDEX>
+                <INDEX NAME="status_prematriculationid" UNIQUE="false" FIELDS="status_prematriculationid" PREVIOUS="organid" NEXT="course_prematriculationid">
+                </INDEX>
+                <INDEX NAME="course_prematriculationid" UNIQUE="false" FIELDS="course_prematriculationid" PREVIOUS="status_prematriculationid" NEXT="cicleinscriptionid">
+                </INDEX>
+                <INDEX NAME="cicleinscriptionid" UNIQUE="false" FIELDS="cicleinscriptionid" PREVIOUS="course_prematriculationid">
+                </INDEX>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="ci_sentmessages" COMMENT="Tabela responsável por armazenar as mensagens ou emails referente ao módulo ciclo de inscriçoes que forem enviados para os alunos. " PREVIOUS="ci_prematriculation" NEXT="ci_data_participant">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="prematriculationid" />
+                <FIELD NAME="prematriculationid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Código identificador da tabela de mensagens enviadas." PREVIOUS="id" NEXT="datetimesent">
+                </FIELD>
+                <FIELD NAME="datetimesent" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Campo que possui as iformações de data." PREVIOUS="prematriculationid" NEXT="description">
+                </FIELD>
+                <FIELD NAME="description" TYPE="char" LENGTH="500" NOTNULL="true" COMMENT="Texto que indentificará forma de envio da mensagem." PREVIOUS="datetimesent">
+                </FIELD>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="prematriculationid" UNIQUE="false" FIELDS="prematriculationid">
+                </INDEX>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="ci_data_participant" COMMENT="Tabela responsável por armazenar os dados dos participantes dos cursos abertos" PREVIOUS="ci_sentmessages">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="userid" />
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Código identificador da tabela de usuários." PREVIOUS="id" NEXT="courseid">
+                </FIELD>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Código identificador de curso." PREVIOUS="userid" NEXT="organid">
+                </FIELD>
+
+                <FIELD NAME="organid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Código identificador de orgãos" PREVIOUS="courseid" NEXT="civilstate">
+                </FIELD>
+                <FIELD NAME="civilstate" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Estado civil." PREVIOUS="organid" NEXT="sex">
+                </FIELD>
+                <FIELD NAME="sex" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Sexo." PREVIOUS="civilstate" NEXT="datebirth">
+                </FIELD>
+                <FIELD NAME="datebirth" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Data de Nascimento" PREVIOUS="sex" NEXT="race">
+                </FIELD>
+                <FIELD NAME="race" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Raça" PREVIOUS="datebirth" NEXT="rolefamily">
+                </FIELD>
+                <FIELD NAME="rolefamily" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Papel na família" PREVIOUS="race" NEXT="schooling">
+                </FIELD>
+                <FIELD NAME="schooling" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Escolaridade" PREVIOUS="rolefamily" NEXT="incomefamily">
+                </FIELD>
+                <FIELD NAME="incomefamily" TYPE="char" LENGTH="100" NOTNULL="false" COMMENT="Renda familiar" PREVIOUS="schooling" NEXT="howdid">
+                </FIELD>
+                <FIELD NAME="howdid" TYPE="char" LENGTH="100" NOTNULL="false" COMMENT="Espaco para regostrar como a pessoa ficou sabendo desse curso (Portal CNJ, Facebook, Twitter, E-mail, Indicação de amigos, Outros)." PREVIOUS="incomefamily" NEXT="deficient">
+                </FIELD>
+                <FIELD NAME="deficient" TYPE="char" LENGTH="100" NOTNULL="false" COMMENT="Espaco para armazenar se a pessoa possui algum tipo de deficiência? Se sim, qual?" PREVIOUS="howdid" NEXT="deficiency">
+                </FIELD>
+                <FIELD NAME="deficiency" TYPE="char" LENGTH="100" NOTNULL="false" COMMENT="Espaco para armazenar a deficiencia" PREVIOUS="deficient">
+                </FIELD>
+                <FIELD NAME="region" TYPE="char" LENGTH="100" NOTNULL="false" COMMENT="Espaco para armazenar a Regiao" PREVIOUS="deficiency" NEXT="state">
+                </FIELD>
+                <FIELD NAME="state" TYPE="char" LENGTH="100" NOTNULL="false" COMMENT="Espaco para armazenar o estado" PREVIOUS="region">
+                </FIELD>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"></KEY>
+            </KEYS>
+        </TABLE>
+
+    </TABLES>
+</XMLDB>
